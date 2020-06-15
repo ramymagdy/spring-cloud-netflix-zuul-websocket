@@ -20,6 +20,7 @@ import com.github.mthizo247.cloud.netflix.zuul.web.socket.ZuulWebSocketPropertie
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
+import org.springframework.core.env.Environment;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -37,8 +38,8 @@ public class EurekaProxyTargetResolver extends AbstractProxyTargetResolver {
     public static final int DEFAULT_ORDER = LoadBalancedProxyTargetResolver.DEFAULT_ORDER + 10;
     private DiscoveryClient discoveryClient;
 
-    public EurekaProxyTargetResolver(DiscoveryClient discoveryClient, ZuulProperties zuulProperties) {
-        super(zuulProperties);
+    public EurekaProxyTargetResolver(DiscoveryClient discoveryClient, ZuulProperties zuulProperties, Environment environment) {
+        super(zuulProperties, environment);
         Assert.notNull(discoveryClient, "discoveryClient can't be null");
         this.discoveryClient = discoveryClient;
         this.order = DEFAULT_ORDER;

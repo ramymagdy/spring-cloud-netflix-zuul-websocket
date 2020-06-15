@@ -18,6 +18,7 @@ package com.github.mthizo247.cloud.netflix.zuul.web.proxytarget;
 
 import com.github.mthizo247.cloud.netflix.zuul.web.socket.ZuulWebSocketProperties;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
+import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 
 import java.net.URI;
@@ -32,8 +33,8 @@ import java.net.URISyntaxException;
 public class UrlProxyTargetResolver extends AbstractProxyTargetResolver {
     public static final int DEFAULT_ORDER = EurekaProxyTargetResolver.DEFAULT_ORDER + 10;
 
-    public UrlProxyTargetResolver(ZuulProperties zuulProperties) {
-        super(zuulProperties);
+    public UrlProxyTargetResolver(ZuulProperties zuulProperties, Environment environment) {
+        super(zuulProperties, environment);
         this.order = DEFAULT_ORDER;
     }
 

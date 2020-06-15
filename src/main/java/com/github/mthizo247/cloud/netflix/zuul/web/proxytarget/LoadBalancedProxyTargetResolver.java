@@ -20,6 +20,7 @@ import com.github.mthizo247.cloud.netflix.zuul.web.socket.ZuulWebSocketPropertie
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
+import org.springframework.core.env.Environment;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -36,8 +37,8 @@ public class LoadBalancedProxyTargetResolver extends AbstractProxyTargetResolver
 
     private LoadBalancerClient loadBalancerClient;
 
-    public LoadBalancedProxyTargetResolver(LoadBalancerClient loadBalancerClient, ZuulProperties zuulProperties) {
-        super(zuulProperties);
+    public LoadBalancedProxyTargetResolver(LoadBalancerClient loadBalancerClient, ZuulProperties zuulProperties, Environment environment) {
+        super(zuulProperties, environment);
         Assert.notNull(loadBalancerClient, "loadBalancerClient can't be null");
         this.loadBalancerClient = loadBalancerClient;
         this.order = DEFAULT_ORDER;

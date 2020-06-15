@@ -66,6 +66,15 @@ public class ZuulWebSocketProperties {
 		private String[] endPoints;
 		private String[] brokers;
 		private String[] destinationPrefixes;
+		private String absUrl;
+
+		public String getAbsUrl() {
+			return absUrl;
+		}
+
+		public void setAbsUrl(String absUrl) {
+			this.absUrl = absUrl;
+		}
 
 		public boolean isEnabled() {
 			return enabled;

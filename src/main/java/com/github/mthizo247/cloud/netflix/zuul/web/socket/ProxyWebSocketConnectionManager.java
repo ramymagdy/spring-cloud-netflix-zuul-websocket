@@ -154,11 +154,6 @@ public class ProxyWebSocketConnectionManager extends ConnectionManagerSupport
     }
 
     public void sendMessage(final String destination, final Object msg) {
-        if (msg instanceof String) { // in case of a json string to avoid double
-            // converstion by the converters
-            serverSession.send(destination, ((String) msg).getBytes());
-            return;
-        }
 
         serverSession.send(destination, msg);
     }

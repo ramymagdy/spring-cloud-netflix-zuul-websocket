@@ -16,18 +16,18 @@
 
 package com.github.mthizo247.cloud.netflix.zuul.web.proxytarget;
 
-import com.github.mthizo247.cloud.netflix.zuul.web.socket.ZuulWebSocketProperties;
-import com.github.mthizo247.cloud.netflix.zuul.web.util.MapPropertyResolver;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
-import org.springframework.core.Ordered;
-import org.springframework.util.Assert;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
+import org.springframework.core.Ordered;
+import org.springframework.core.env.Environment;
+import org.springframework.util.Assert;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.github.mthizo247.cloud.netflix.zuul.web.socket.ZuulWebSocketProperties;
 
 /**
  * @author Ronald Mthombeni
@@ -36,10 +36,12 @@ import java.util.Map;
 public abstract class AbstractProxyTargetResolver implements ProxyTargetResolver, Ordered {
     protected ZuulProperties zuulProperties;
     protected int order = 0;
+	private Environment environment;
 
-    public AbstractProxyTargetResolver(ZuulProperties zuulProperties) {
+    public AbstractProxyTargetResolver(ZuulProperties zuulProperties, Environment environment) {
         Assert.notNull(zuulProperties, "zuulProperties must not be null");
         this.zuulProperties = zuulProperties;
+        this.environment = environment;
     }
 
     protected ZuulProperties.ZuulRoute resolveRoute(ZuulWebSocketProperties.WsBrokerage wsBrokerage) {
@@ -56,8 +58,7 @@ public abstract class AbstractProxyTargetResolver implements ProxyTargetResolver
         }
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(serviceInstance.getUri());
-        RelaxedPropertyResolver propertyResolver = new RelaxedPropertyResolver(new MapPropertyResolver(metadata));
-        String configPath = propertyResolver.getProperty("configPath");
+        String configPath = environment.getProperty("configPath");
         if (configPath != null) {
             uriBuilder.path(configPath);
         }

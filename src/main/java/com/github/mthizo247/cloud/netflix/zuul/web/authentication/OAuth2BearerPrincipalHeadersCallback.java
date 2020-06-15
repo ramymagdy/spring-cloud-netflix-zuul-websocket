@@ -16,33 +16,21 @@
 
 package com.github.mthizo247.cloud.netflix.zuul.web.authentication;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.WebSocketSession;
-
-import java.util.Collections;
 
 /**
  * @author Marcin Podlodowski
  */
 public class OAuth2BearerPrincipalHeadersCallback extends AbstractHeadersCallback {
 
-    @Override
-    protected void applyHeadersInternal(WebSocketSession userAgentSession, WebSocketHttpHeaders headers) {
-        OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) userAgentSession.getPrincipal();
-        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) oAuth2Authentication.getDetails();
-        String accessToken = details.getTokenValue();
-        headers.put(HttpHeaders.AUTHORIZATION, Collections.singletonList("Bearer " + accessToken));
-        if (logger.isDebugEnabled()) {
-            logger.debug("Added Oauth2 bearer token authentication header for user " +
-                    oAuth2Authentication.getName() + " to web sockets http headers");
-        }
-    }
+	@Override
+	protected void applyHeadersInternal(WebSocketSession userAgentSession, WebSocketHttpHeaders headers) {
+		
+	}
 
-    @Override
-    protected boolean shouldApplyHeaders(WebSocketSession userAgentSession, WebSocketHttpHeaders headers) {
-        return !headers.containsKey(HttpHeaders.AUTHORIZATION) && userAgentSession.getPrincipal() instanceof OAuth2Authentication;
-    }
+	@Override
+	protected boolean shouldApplyHeaders(WebSocketSession userAgentSession, WebSocketHttpHeaders headers) {
+		return false;
+	}
 }

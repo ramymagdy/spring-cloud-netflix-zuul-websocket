@@ -44,6 +44,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.env.Environment;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -181,32 +182,26 @@ public class ZuulWebSocketConfiguration extends AbstractWebSocketMessageBrokerCo
     }
 
     @Bean
-    @ConditionalOnClass(name = "org.springframework.security.core.OAuth2Authentication")
-    public WebSocketHttpHeadersCallback oauth2BearerPrincipalHeadersCallback() {
-        return new OAuth2BearerPrincipalHeadersCallback();
-    }
-
-    @Bean
     public WebSocketHttpHeadersCallback loginCookieHeadersCallback() {
         return new LoginCookieHeadersCallback();
     }
 
     @Bean
     public ProxyTargetResolver urlProxyTargetResolver(
-            final ZuulProperties zuulProperties) {
-        return new UrlProxyTargetResolver(zuulProperties);
+            final ZuulProperties zuulProperties, final Environment environment) {
+        return new UrlProxyTargetResolver(zuulProperties, environment);
     }
 
     @Bean
     public ProxyTargetResolver discoveryProxyTargetResolver(
-            final ZuulProperties zuulProperties, final DiscoveryClient discoveryClient) {
-        return new EurekaProxyTargetResolver(discoveryClient, zuulProperties);
+            final ZuulProperties zuulProperties, final DiscoveryClient discoveryClient, final Environment environment) {
+        return new EurekaProxyTargetResolver(discoveryClient, zuulProperties, environment);
     }
 
     @Bean
     public ProxyTargetResolver loadBalancedProxyTargetResolver(
-            final ZuulProperties zuulProperties, final LoadBalancerClient loadBalancerClient) {
-        return new LoadBalancedProxyTargetResolver(loadBalancerClient, zuulProperties);
+            final ZuulProperties zuulProperties, final LoadBalancerClient loadBalancerClient, final Environment environment) {
+        return new LoadBalancedProxyTargetResolver(loadBalancerClient, zuulProperties, environment);
     }
 
     @Bean
@@ -265,8 +260,8 @@ public class ZuulWebSocketConfiguration extends AbstractWebSocketMessageBrokerCo
 
     @PostConstruct
     public void init() {
-        ignorePattern("**/websocket");
-        ignorePattern("**/info");
+        ignorePattern("/**/websocket");
+        ignorePattern("/**/info");
     }
 
     private void ignorePattern(String ignoredPattern) {

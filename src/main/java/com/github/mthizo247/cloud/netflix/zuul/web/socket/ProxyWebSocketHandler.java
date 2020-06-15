@@ -124,7 +124,25 @@ public class ProxyWebSocketHandler extends WebSocketHandlerDecorator {
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message)
             throws Exception {
         super.handleMessage(session, message);
-        handleMessageFromClient(session, message);
+        
+        Boolean canProxy = false;
+        URI sessionUri = session.getUri();
+        for (Map.Entry<String, ZuulWebSocketProperties.WsBrokerage> entry : zuulWebSocketProperties
+                .getBrokerages().entrySet()) {
+        	for (String endPoint : entry.getValue().getEndPoints()) {
+        		if (sessionUri.toString().startsWith(endPoint)) {
+        			canProxy = true;
+        			break;
+        		}
+        	}
+        	if (canProxy)
+        		break;
+        }
+        
+        if (canProxy)
+        	handleMessageFromClient(session, message);
+        else
+        	getDelegate().handleMessage(session, message);
     }
 
     private void handleMessageFromClient(WebSocketSession session,
@@ -174,7 +192,7 @@ public class ProxyWebSocketHandler extends WebSocketHandlerDecorator {
         Assert.notNull(routeTarget, "routeTarget must not be null");
 
         String uri = ServletUriComponentsBuilder
-                .fromUri(routeTarget)
+                .fromUri(URI.create(wsBrokerage.getAbsUrl()))
                 .path(path)
                 .replaceQuery(sessionUri.getQuery())
                 .toUriString();
