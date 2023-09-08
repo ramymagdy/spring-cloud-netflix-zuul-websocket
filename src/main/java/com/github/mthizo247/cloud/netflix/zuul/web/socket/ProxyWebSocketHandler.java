@@ -123,8 +123,6 @@ public class ProxyWebSocketHandler extends WebSocketHandlerDecorator {
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message)
             throws Exception {
-        super.handleMessage(session, message);
-        
         Boolean canProxy = false;
         URI sessionUri = session.getUri();
         for (Map.Entry<String, ZuulWebSocketProperties.WsBrokerage> entry : zuulWebSocketProperties
