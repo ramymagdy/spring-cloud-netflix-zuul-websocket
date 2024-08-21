@@ -136,11 +136,12 @@ public class ProxyWebSocketHandler extends WebSocketHandlerDecorator {
         	if (canProxy)
         		break;
         }
-        
-        if (canProxy)
+       
+       	getDelegate().handleMessage(session, message);
+        if (canProxy) {
         	handleMessageFromClient(session, message);
-        else
-        	getDelegate().handleMessage(session, message);
+
+	} 
     }
 
     private void handleMessageFromClient(WebSocketSession session,
